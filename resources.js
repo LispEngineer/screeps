@@ -1,1 +1,0 @@
-../screeps-steam-default/resources.js
