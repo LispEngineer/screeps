@@ -27,8 +27,8 @@ let resources = require('resources');
 function collect_stats() {
 
     // Don't overwrite things if other modules are putting stuff into Memory.stats
-    if (Memory.stats == undefined) {
-        Memory.stats = {};
+    if (Memory.stats == null) {
+        Memory.stats = { tick: Game.time };
     }
 
     // Note: This is fragile and will change if the Game.cpu API changes
@@ -43,6 +43,11 @@ function collect_stats() {
     Memory.stats.memory = {
         used: memory_used,
         // Other memory stats here?
+    };
+
+    Memory.stats.market = {
+        credits: Game.market.credits,
+        num_orders: Game.market.orders ? Object.keys(Game.market.orders).length : 0,
     };
 
     Memory.stats.roomSummary = resources.summarize_rooms();
