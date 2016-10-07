@@ -39,3 +39,54 @@ production coding in JavaScript.
 * `grafana.json` - An exported Grafana module that graphs the stats from my above
   `screepsplus.js`, as well as some data (e.g., my "ratchet" mechanism) that I haven't
   exported but which is tied in via the above-mentioned callbacks.
+
+
+# How To Use WebStorm
+
+* Install Steam Client using Steam for Mac
+* Let it download your source code to local filesystem.
+  * Location: `~/Library/Application Support/Screeps/scripts/screeps.com/default`
+  * Seems like each "branch" has its own directory
+* `brew install node` (use v6.6.0 [which is what Screeps uses](http://support.screeps.com/hc/en-us/articles/205960931-Server-side-architecture-overview))
+* `git clone https://github.com/Garethp/ScreepsAutocomplete.git` somewhere
+* Install WebStorm
+
+## Configuring WebStorm Project
+
+* Import the Screeps source code directory as a new, empty project in WebStorm
+* Settings -> Languages & Frameworks -> Node.js and NPM -> Node.js Core Library *ENABLE*
+  * Now statements like `require` and variables like `global` will work
+* Settings -> Languages & Frameworks -> JavaScript
+  * JavaScript Language Version *ECMAScript 6*
+  * Prefer Strict Mode
+  * -> Libraries: Enable ECMAScript 6 library
+* Settings -> Languages & Frameworks -> JavaScript Libraries
+  * Add: ScreepsAutocomplete [per instructions](https://github.com/Garethp/ScreepsAutocomplete)
+* Set up `.gitignore` using [JetBrains template](https://raw.githubusercontent.com/github/gitignore/master/Global/JetBrains.gitignore)
+* Configure loDash
+  * `console.log(_.VERSION)` in Screeps console => `3.10.1`
+  * Clone it from git somewhere outside your project
+  * `git checkout -b refs/tags/3.10.1`
+  * Set up in WebStorm:
+     * Settings -> Languages & Frameworks -> JavaScript -> Libraries
+     * Click `Add`, and then in the `Edit Library` window:
+     * Name: lodash
+     * Framework type: custom
+     * Visibility: Global
+     * Version (it doesn't seem to save this, so leave blank)
+     * Click `+` and add your cloned, checked out GitHub repo of lodash
+     * Click `+` for docs and add `https://lodash.com/docs/3.10.1`
+     * Click `OK` a few times and you're done
+  * Don't do this:
+     * Settings -> Languages & Frameworks -> Node.js and NPM "for current project"
+     * Click `+` on the bottom
+     * Search for `lodash` in the "Available Packages" window that pops up
+     * Check "Specify Version" and put in 3.10.1 and click `Install Package`
+     * It loads into a "node_modules". Unless, of course, that's what you want (I don't)
+
+# Using WebStrorm and Screeps
+
+* Any time you save a file in WebStorm *and then swap foreground program back to Screeps Steam Client*,
+  the Screeps client automatically pushes it to the server. However, the italicized part doesn't
+  always seem to be true.
+
