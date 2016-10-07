@@ -20,10 +20,20 @@
 
 
 "use strict";
-let resources = require('resources');
+const resources = require('resources');
+const cb = require('callback');
+
+global.stats_callbacks = new cb.Callback();
+
+// Tell us that you want a callback when we're collecting the stats.
+// We will send you in the partially completed stats object.
+function add_stats_callback(cbfunc) {
+    global.stats_callbacks.subscribe(cbfunc);
+}
 
 
-// Update the Memory.stats with useful information for trend analysis and graphing
+// Update the Memory.stats with useful information for trend analysis and graphing.
+// Also calls all registered stats callback functions before returning.
 function collect_stats() {
 
     // Don't overwrite things if other modules are putting stuff into Memory.stats
@@ -51,8 +61,15 @@ function collect_stats() {
     };
 
     Memory.stats.roomSummary = resources.summarize_rooms();
-}
+
+    // Add callback functions which we can call to add additional
+    // statistics to here, and have a way to register them.
+    // 1. Merge in the current repair ratchets into the room summary
+    // TODO: Merge in the current creep desired numbers into the room summary
+    global.stats_callbacks.fire(Memory.stats);
+} // collect_stats
 
 module.exports = {
     collect_stats,
+    add_stats_callback,
 };
